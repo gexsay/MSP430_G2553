@@ -1,7 +1,6 @@
 #include <msp430.h> 
-#include <stdbool.h>
 
-bool start;
+int start;
 int speed = 0;
 
 int main(void){
