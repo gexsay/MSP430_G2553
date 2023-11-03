@@ -1,62 +1,58 @@
 #include <msp430.h> 
 
-int start;
-int speed;
+int gSTART;
+int gSPEED;
 
-int main(void){
-
+int main(void) {
 	WDTCTL = WDTPW | WDTHOLD;
+
+	//LED 1, 6 on
+	P1DIR = BIT0 | BIT6;
+
+	///DEBUG
 	
-	P1DIR = BIT0 | BIT6;                    //LED 1,6 on
+	//LED RED ON
+	P1OUT = BIT0;
 
-	//DEBUG
-
-	P1OUT = BIT0;                           //LED red on
-
-	__delay_cycles(5000000);                //delay 5s for start
+	//delay 5s for start
+	__delay_cycles(5000000);
 
 	start = 1;
 	P1OUT = ~BIT0;
 
-	//DEBUG
+	///DEBUG
+	
+    	P1REN = BIT3;
+    	P1IE = BIT3;
+    	P1IES = BIT3;
+    	P1IFG = 0x00;
 
-    P1REN = BIT3;
+        _enable_interrupts();
 
-    P1IE = BIT3;
-    P1IES = BIT3;
-    P1IFG = 0x00;
-
-    _enable_interrupts();
-
-    while(start){
-
-        if (speed < 10){
-
+        while (start) {
+       	    if (speed < 10) {
             speed++;
-            __delay_cycles(1000000);        // delay 0.5s
+	    // delay 0.5s
+            __delay_cycles(1000000);
 
             P1OUT ^= BIT6;
-
         }
-            else{
 
-                P1OUT ^= BIT6;
-                __delay_cycles(250000);     // delay 0.25s
-            }
+            else {
+            P1OUT ^= BIT6;
+	    // delay 0.25s
+            __delay_cycles(250000);
+        }
 
     }
 
     P1OUT = ~BIT6;
-
 }
 
-
 #pragma vector=PORT1_VECTOR
-__interrupt void PORT1_ISR(void){
-
+__interrupt void PORT1_ISR(void) {
     start = 0;
     speed = 0;
     P1OUT = ~BIT6 & BIT0;
-
     P1IFG = 0x00;
 }
