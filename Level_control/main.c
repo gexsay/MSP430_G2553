@@ -1,7 +1,7 @@
 #include <msp430.h> 
 
 int start;
-int speed = 0;
+int speed;
 
 int main(void){
 
