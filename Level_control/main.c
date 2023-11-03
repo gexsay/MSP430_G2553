@@ -17,7 +17,7 @@ int main(void) {
 	//delay 5s for start
 	__delay_cycles(5000000);
 
-	start = 1;
+	gSTART = 1;
 	P1OUT = ~BIT0;
 
 	///DEBUG
@@ -29,9 +29,9 @@ int main(void) {
 
         _enable_interrupts();
 
-        while (start) {
+        while (gSTART) {
        	    if (speed < 10) {
-            speed++;
+            gSPEED++;
 	    // delay 0.5s
             __delay_cycles(1000000);
 
@@ -51,8 +51,8 @@ int main(void) {
 
 #pragma vector=PORT1_VECTOR
 __interrupt void PORT1_ISR(void) {
-    start = 0;
-    speed = 0;
+    gSTART = 0;
+    gSPEED = 0;
     P1OUT = ~BIT6 & BIT0;
     P1IFG = 0x00;
 }
